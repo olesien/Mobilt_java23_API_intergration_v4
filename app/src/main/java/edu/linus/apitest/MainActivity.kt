@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val field = findViewById<EditText>(R.id.name)
         val btn = findViewById<Button>(R.id.login)
 
-        sharedPref = getPreferences(Context.MODE_PRIVATE)
+        sharedPref = getSharedPreferences(getString(R.string.storage_key), Context.MODE_PRIVATE)
 
         btn.setOnClickListener {
             //Login

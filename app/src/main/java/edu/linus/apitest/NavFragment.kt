@@ -1,57 +1,55 @@
 package edu.linus.apitest;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+class NavFragment : Fragment(R.layout.fragment_nav), NavigationBarView.OnItemSelectedListener {
+    var nav: BottomNavigationView? = null
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
-
-public class NavFragment extends Fragment implements NavigationBarView. OnItemSelectedListener {
-    public NavFragment() {
-        super(R.layout.fragment_nav);
-    }
-    BottomNavigationView nav;
-    Context context;
-    View view;
-
-    @Override
-    public void onViewCreated(@NonNull View createdView, Bundle savedInstanceState) {
-        context = getContext();
-        view = createdView;
-        nav = createdView.findViewById(R.id.bottomNavigationView);
+    override fun onViewCreated(createdView: View, savedInstanceState: Bundle?) {
+        nav = createdView.findViewById(R.id.bottomNavigationView)
 
         //Check if the activity is instance of one of the two, and if so set it to be active item.
-//        if (getActivity() instanceof MainActivity) {
-//            nav.setSelectedItemId(R.id.accNav);
-//            Log.i("TAG", "SETTING TO ACC");
-//        } else if (getActivity() instanceof RotationActivity) {
-//            nav.setSelectedItemId(R.id.compassNav);
-//            Log.i("TAG", "SETTING TO COMPASS");
-//        }
+        if (activity is Home) {
+            nav?.setSelectedItemId(R.id.homeNav);
+        } else if (activity is Favorties) {
+            nav?.setSelectedItemId(R.id.favoritesNav);
+        } else if (activity is Search) {
+            nav?.setSelectedItemId(R.id.searchNav);
+        }
 
         //Set the listener AFTER the active item is changed
-        nav.setOnItemSelectedListener(this);
+        nav?.setOnItemSelectedListener(this)
     }
 
-    @Override
-    public boolean
-    onNavigationItemSelected(@NonNull MenuItem item)
-    {
-        int id = item.getItemId();
-//        if (id == R.id.accNav) {
-//            this.startActivity(new Intent(context, MainActivity.class));
-//            return true;
-//        } else if (id == R.id.compassNav) {
-//            this.startActivity(new Intent(context, RotationActivity.class));
-//            return true;
-//        }
-        return false;
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.homeNav) {
+            this.startActivity(Intent(context, Home::class.java))
+            return true
+        } else if (id == R.id.favoritesNav) {
+            this.startActivity(Intent(context, Favorties::class.java))
+            return true
+        } else if (id == R.id.searchNav) {
+            this.startActivity(Intent(context, Search::class.java))
+            return true
+        } else if (id == R.id.logoutNav) {
+            //Logout
+            val sharedPref = context?.getSharedPreferences(getString(R.string.storage_key), Context.MODE_PRIVATE) ?: return false
+
+            with(sharedPref.edit()) {
+                putString(getString(R.string.storage_key), null)
+                apply()
+            }
+            this.startActivity(Intent(context, MainActivity::class.java))
+            return true
+        }
+        return false
     }
 }
