@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeNav"
+        android:title="@string/home"
+        android:icon="@drawable/house_solid"/>
+    <item
+        android:id="@+id/favoritesNav"
+        android:title="@string/favorites"
+        android:icon="@drawable/star_solid"/>
+    <item
+        android:id="@+id/searchNav"
+        android:title="@string/search"
+        android:icon="@drawable/magnifying_glass_solid"/>
+    <item
+        android:id="@+id/logoutNav"
+        android:title="@string/logout"
+        android:icon="@drawable/right_from_bracket_solid"/>
+</menu>
