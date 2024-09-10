@@ -1,10 +1,18 @@
 package edu.linus.apitest
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.android.volley.Request
@@ -15,23 +23,18 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import org.w3c.dom.Text
+import java.util.Locale
 
 class Home : AppCompatActivity() {
-    private fun makeReq() {
-        /* Volley example */
-        val url = "https://italian-jokes.vercel.app/api/jokes";
-
-        val rq: RequestQueue = Volley.newRequestQueue( /* context = */ this)
-
-        var request = StringRequest( Request.Method.GET , url,
-            { res -> Log.d("Linus",res.toString())  } ,
-            { err ->  Log.e("Linus",err.toString()) }
-        )
-
-        rq.add(request)
-    }
-
-    private fun makeJsonReq(textView: TextView) {
+    // declare a global variable of FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var descriptionText: TextView
+    private fun getWeatherHomeData(key: String, lat: Double, long: Double) {
 // Instantiate the cache
         val cache = DiskBasedCache(cacheDir, 1024 * 1024) // 1MB cap
 
@@ -40,12 +43,27 @@ class Home : AppCompatActivity() {
             start()
         }
 
-        val url = "https://italian-jokes.vercel.app/api/jokes"
+        val url = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$long&appid=$key"
 
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             { response ->
-                textView.text = "Response: %s".format(response.get("joke").toString())
+                //textView.text = "Response: %s".format(response.get("joke").toString())
+                Log.i("TAG", response.toString())
+
+                //Render
+                val weather = response.getJSONArray("weather")
+                val base = response.get("base")
+
+                if (weather.length() > 0) {
+                    //Get first
+                    val townWeather = weather.getJSONObject(0);
+                    if (townWeather != null) {
+                        descriptionText.text = townWeather.getString("description")
+                    }
+
+
+                }
             },
             { error ->
                 // TODO: Handle error
@@ -54,6 +72,20 @@ class Home : AppCompatActivity() {
         )
         requestQueue.add(jsonObjectRequest)
     }
+
+    private fun getData(location: Location?) {
+        val key = BuildConfig.WEATHER_KEY
+        //val geoCoder = Geocoder(this, Locale.getDefault())
+        if (location != null) {
+            // use your location object
+            // get latitude , longitude and other info from this
+            Log.i("TAG", "LINUS -> $location")
+            getWeatherHomeData(key, location.latitude, location.longitude)
+        } else {
+            Log.i("TAG", "LINUS -> Location is null")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -62,8 +94,41 @@ class Home : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        descriptionText = findViewById(R.id.description)
 
-        val key = BuildConfig.WEATHER_KEY
-        Log.i("LINUS", "APIKEY: $key")
+        // in onCreate() initialize FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    // Permission is granted. Try again!
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location->
+                            getData(location)
+                        }
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied
+                    Toast.makeText(this, "You have previously said no to access for this app on fine location, please check settings and re-enable to continue.", Toast.LENGTH_LONG).show()
+                }
+            }.launch(
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+
+        }
+
+        //After above is done, set listener.
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location->
+                getData(location)
+            }
     }
 }
