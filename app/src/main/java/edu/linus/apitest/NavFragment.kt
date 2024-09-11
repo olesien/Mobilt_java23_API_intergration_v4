@@ -16,11 +16,11 @@ class NavFragment : Fragment(R.layout.fragment_nav), NavigationBarView.OnItemSel
         nav = createdView.findViewById(R.id.bottomNavigationView)
 
         //Check if the activity is instance of one of the two, and if so set it to be active item.
-        if (activity is Home) {
+        if (activity is HomeActivity) {
             nav?.setSelectedItemId(R.id.homeNav);
-        } else if (activity is Favorties) {
+        } else if (activity is FavoritesActivity) {
             nav?.setSelectedItemId(R.id.favoritesNav);
-        } else if (activity is Search) {
+        } else if (activity is SearchActivity) {
             nav?.setSelectedItemId(R.id.searchNav);
         }
 
@@ -31,13 +31,13 @@ class NavFragment : Fragment(R.layout.fragment_nav), NavigationBarView.OnItemSel
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.homeNav) {
-            this.startActivity(Intent(context, Home::class.java))
+            this.startActivity(Intent(context, HomeActivity::class.java))
             return true
         } else if (id == R.id.favoritesNav) {
-            this.startActivity(Intent(context, Favorties::class.java))
+            this.startActivity(Intent(context, FavoritesActivity::class.java))
             return true
         } else if (id == R.id.searchNav) {
-            this.startActivity(Intent(context, Search::class.java))
+            this.startActivity(Intent(context, SearchActivity::class.java))
             return true
         } else if (id == R.id.logoutNav) {
             //Logout

@@ -16,16 +16,20 @@
         android:theme="@style/Theme.ApiTest"
         tools:targetApi="31">
         <service
-            android:name=".Home"
+            tools:ignore="Instantiatable"
+            android:name=".HomeActivity"
             android:foregroundServiceType="location"/>
         <activity
-            android:name=".Search"
+            tools:ignore="Instantiatable"
+            android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".Favorties"
+            tools:ignore="Instantiatable"
+            android:name=".FavoritesActivity"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            tools:ignore="Instantiatable"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

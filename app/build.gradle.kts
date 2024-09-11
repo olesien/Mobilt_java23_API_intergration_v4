@@ -32,7 +32,6 @@ android {
         buildConfigField("String", "LOCATIONIQ_KEY", "\"${locationIq}\"")
 
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false

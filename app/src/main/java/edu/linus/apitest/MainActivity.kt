@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,14 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.BasicNetwork
-import com.android.volley.toolbox.DiskBasedCache
-import com.android.volley.toolbox.HurlStack
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private fun login () {
         val myIntent = Intent(
             this,
-            Home::class.java
+            HomeActivity::class.java
         )
         startActivity(myIntent)
     }
