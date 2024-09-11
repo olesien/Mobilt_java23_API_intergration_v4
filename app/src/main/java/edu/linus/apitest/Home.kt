@@ -39,7 +39,7 @@ class Home : AppCompatActivity() {
     private lateinit var weatherText: TextView
 
     private fun getWeatherHomeData(key: String, lat: Double, long: Double) {
-// Instantiate the cache
+    // Instantiate the cache
         val cache = DiskBasedCache(cacheDir, 1024 * 1024) // 1MB cap
 
         val network = BasicNetwork(HurlStack())

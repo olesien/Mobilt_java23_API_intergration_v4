@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -24,11 +25,12 @@ android {
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
         }
-
-        // Retrieve the API key
+        // Retrieve the API keys
         val weatherKey = localProperties.getProperty("WEATHER_KEY") ?: ""
-
+        val locationIq = localProperties.getProperty("LOCATIONIQ_KEY") ?: ""
         buildConfigField("String", "WEATHER_KEY", "\"${weatherKey}\"")
+        buildConfigField("String", "LOCATIONIQ_KEY", "\"${locationIq}\"")
+
     }
 
     buildTypes {
@@ -54,6 +56,9 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.androidx.cardview)
     // https://mvnrepository.com/artifact/com.android.volley/volley
     implementation(libs.volley)
     implementation(libs.androidx.core.ktx)

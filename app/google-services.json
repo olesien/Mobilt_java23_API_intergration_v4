@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1020470496491",
+    "project_id": "weatherapp-e0858",
+    "storage_bucket": "weatherapp-e0858.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020470496491:android:e69f4c76feaaea351e02ae",
+        "android_client_info": {
+          "package_name": "edu.linus.apitest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBADLH593xwqzgJloPiN524AVPTtMZFYZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,4 +11,9 @@
     <string name="weather">Weather: %1$s</string>
     <string name="homeText">Home</string>
     <string name="loading">Loading....</string>
+    <string name="searchTitle">Search</string>
+    <string name="enter_city_name_or_country">Enter city name or country</string>
+    <string name="initial_search">Search above to get started!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
