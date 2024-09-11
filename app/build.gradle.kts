@@ -59,7 +59,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.androidx.cardview)
     // https://mvnrepository.com/artifact/com.android.volley/volley
-    implementation(libs.volley)
+    implementation(files("./libs/volley-1.2.1.aar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

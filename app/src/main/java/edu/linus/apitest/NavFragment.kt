@@ -47,7 +47,9 @@ class NavFragment : Fragment(R.layout.fragment_nav), NavigationBarView.OnItemSel
                 putString(getString(R.string.storage_key), null)
                 apply()
             }
-            this.startActivity(Intent(context, MainActivity::class.java))
+            val intent = Intent(context, MainActivity::class.java)
+            //intent.FLAG_ACTIVITY
+            this.startActivity(intent)
             return true
         }
         return false
