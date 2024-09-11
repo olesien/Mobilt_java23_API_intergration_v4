@@ -33,7 +33,11 @@ import java.util.Locale
 class Home : AppCompatActivity() {
     // declare a global variable of FusedLocationProviderClient
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var descriptionText: TextView
+    private lateinit var cityText: TextView
+    private lateinit var tempText: TextView
+    private lateinit var humidityText: TextView
+    private lateinit var weatherText: TextView
+
     private fun getWeatherHomeData(key: String, lat: Double, long: Double) {
 // Instantiate the cache
         val cache = DiskBasedCache(cacheDir, 1024 * 1024) // 1MB cap
@@ -43,7 +47,7 @@ class Home : AppCompatActivity() {
             start()
         }
 
-        val url = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$long&appid=$key"
+        val url = "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=$lat&lon=$long&appid=$key"
 
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -53,13 +57,20 @@ class Home : AppCompatActivity() {
 
                 //Render
                 val weather = response.getJSONArray("weather")
-                val base = response.get("base")
-
+                val main = response.getJSONObject("main")
+                val sys = response.getJSONObject("sys")
                 if (weather.length() > 0) {
                     //Get first
                     val townWeather = weather.getJSONObject(0);
                     if (townWeather != null) {
-                        descriptionText.text = townWeather.getString("description")
+                        cityText.text =
+                            getString(R.string.city, response.get("name"), sys.get("country"))
+                        tempText.text =
+                            getString(R.string.temp, main.getString("temp"))
+                        humidityText.text =
+                            getString(R.string.humidity, main.getString("humidity"))
+                        weatherText.text =
+                            getString(R.string.weather, townWeather.getString("description"))
                     }
 
 
@@ -94,7 +105,10 @@ class Home : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        descriptionText = findViewById(R.id.description)
+        cityText = findViewById(R.id.city)
+        tempText = findViewById(R.id.temp)
+        humidityText = findViewById(R.id.humidity)
+        weatherText = findViewById(R.id.weather)
 
         // in onCreate() initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)

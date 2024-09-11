@@ -12,4 +12,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="edu.linus.apitest.NavFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Name"
+            tools:layout_editor_absoluteX="94dp"
+            tools:layout_editor_absoluteY="93dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
