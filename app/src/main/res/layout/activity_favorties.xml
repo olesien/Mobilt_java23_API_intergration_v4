@@ -12,4 +12,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="edu.linus.apitest.NavFragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorites"
+        android:layout_marginTop="20dp"
+        android:textSize="40sp" />
+        <ScrollView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="90dp">
+            <LinearLayout
+                android:id="@+id/favResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No favorites have been added yet. Please click search then click add on some!"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+        </ScrollView>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

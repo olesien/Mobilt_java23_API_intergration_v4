@@ -50,7 +50,7 @@ class Search : AppCompatActivity() {
                         val exists = cordList.find { cords ->
                             cords.getOrDefault("lat", "0").toDouble().equals(lat) && cords.getOrDefault("long", "0").toDouble().equals(long)
                         }
-                        UtilFuncs.getWeatherData(this, lat, long, searchResults, exists == null, db, userId, cordList)
+                        UtilFuncs.getWeatherData(this, lat, long, searchResults, exists == null, db, userId, false)
                         Log.i("TAG", "TAGGGG ADDING VIEW ")
                     }
                 } else {

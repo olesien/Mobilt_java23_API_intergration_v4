@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UtilFuncs {
     companion object {
-        fun getWeatherData(context: Context, lat: Double, long: Double, results: LinearLayout, isAdd: Boolean, db: FirebaseFirestore, userId: String, cordList: ArrayList<HashMap<String, String>>) {
+        fun getWeatherData(context: Context, lat: Double, long: Double, results: LinearLayout, isAdd: Boolean, db: FirebaseFirestore, userId: String, fromFav: Boolean) {
             val key = BuildConfig.WEATHER_KEY
             val cache = DiskBasedCache(context.cacheDir, 1024 * 1024) // 1MB cap
 
@@ -47,7 +47,7 @@ class UtilFuncs {
                         //Get first
                         val townWeather = weather.getJSONObject(0);
                         if (townWeather != null) {
-                            generateList(context, results, response.getString("name"),sys.getString("country"), main.getString("humidity"),main.getString("temp"), townWeather.getString("description"), isAdd, db, userId, cordList, lat, long )
+                            generateList(context, results, response.getString("name"),sys.getString("country"), main.getString("humidity"),main.getString("temp"), townWeather.getString("description"), isAdd, db, userId, lat, long, fromFav )
                             //Originally I had intended to make each one its own fragment, thinking of it as a component
                             //But after looking online I decided this was not a good idea.
                         }
@@ -62,7 +62,7 @@ class UtilFuncs {
             )
             requestQueue.add(jsonObjectRequest)
         }
-        fun generateList(context: Context, results: LinearLayout, city: String, country: String, humidity: String, temp: String, description: String, isAdd: Boolean, db: FirebaseFirestore, userId: String, cordList: ArrayList<HashMap<String, String>>, lat: Double, long: Double) {
+        fun generateList(context: Context, results: LinearLayout, city: String, country: String, humidity: String, temp: String, description: String, isAdd: Boolean, db: FirebaseFirestore, userId: String, lat: Double, long: Double, fromFav: Boolean) {
             //Create a card view
             val card = CardView(context)
             card.apply {
@@ -129,25 +129,43 @@ class UtilFuncs {
                 text = if (isAdd) "Add" else "Remove"
             }
 
-            if (isAdd) {
-                btn.setOnClickListener {
+            var isAddBtn = isAdd; //Duplicate so we can change later
 
-                    Log.i("TAG", "Adding to favorties: ")
-                    btn.text = "Remove"
-                    //Add to firebase
-                    //val sharedPref = context.getSharedPreferences(context.getString(R.string.storage_key), Context.MODE_PRIVATE)
-                    //val username = sharedPref.getString(context.getString(R.string.storage_key), null)
-                    val newCords = HashMap<String, String>();
-                    newCords["lat"] = lat.toString()
-                    newCords["long"] = long.toString()
-                    cordList.add(newCords)
-                    db.collection("users").document(userId).update("favorties", cordList).apply {
-                        addOnSuccessListener {
-                            Log.i("TAG", "Successfully edited user")
+            btn.setOnClickListener {
+
+                //Get latest cords
+                db.collection("users").document(userId).get().addOnSuccessListener { document ->
+                    if (document != null) {
+                        val updatedCordsList = document.data?.get("favorties") as ArrayList<HashMap<String, String>>
+                        Log.i("TAG", if (isAddBtn) "Adding to favorites" else "Removing from favorites")
+                        btn.text = if (isAddBtn) "Remove" else "Add"
+                        //Modify firebase
+                        if (isAddBtn) {
+                            val newCords = HashMap<String, String>();
+                            newCords["lat"] = lat.toString()
+                            newCords["long"] = long.toString()
+                            updatedCordsList.add(newCords)
+                        } else {
+                            //Delete
+                            updatedCordsList.remove(updatedCordsList.find{cords -> lat.toString() == cords["lat"] && long.toString() == cords["long"]})
+                        }
+
+                        db.collection("users").document(userId).update("favorties", updatedCordsList).apply {
+                            addOnSuccessListener {
+                                Log.i("TAG", "Successfully edited user")
+                            }
+                        }
+                        isAddBtn = !isAddBtn; //Reverse
+
+                        if (fromFav) {
+                            //Here we want to straight up delete the row if we delete
+                            (card.parent as LinearLayout).removeView(card)
                         }
                     }
                 }
+
             }
+
 
             constraintLayout1.addView(cityText)
             constraintLayout1.addView(humidityText)
