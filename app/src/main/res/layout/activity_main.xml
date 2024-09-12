@@ -23,7 +23,7 @@
             android:id="@+id/tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="@string/weatherapp_login"
             android:layout_margin="20dp"/>
 
         <EditText

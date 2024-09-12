@@ -21,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 
 class SearchActivity : AppCompatActivity() {
     lateinit var searchResults: LinearLayout
+    lateinit var searchBtn: Button
     private fun getGeocodeByName(searchText: String, cordList: ArrayList<HashMap<String, String>>, db: FirebaseFirestore, userId: String) {
 // Instantiate the cache
         val key = BuildConfig.LOCATIONIQ_KEY
@@ -32,7 +33,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val url = "https://us1.locationiq.com/v1/search?q=$searchText&format=json&key=$key"
-
+        searchBtn.text = "Searching.."
+        searchBtn.isEnabled = false
         val jsonArrayRequest = JsonArrayRequest(
             Request.Method.GET, url, null,
             { response ->
@@ -53,6 +55,8 @@ class SearchActivity : AppCompatActivity() {
                     //We have no results
 
                 }
+                searchBtn.isEnabled = true
+                searchBtn.text = "Search"
 
             },
             { error ->
@@ -76,7 +80,8 @@ class SearchActivity : AppCompatActivity() {
         searchResults=findViewById(R.id.searchResults)
         val searchField = findViewById<EditText>(R.id.search)
         //Get all coords by this user
-        findViewById<Button>(R.id.searchBtn).setOnClickListener {
+        searchBtn = findViewById<Button>(R.id.searchBtn)
+        searchBtn.setOnClickListener {
             //Search
             val text = searchField.text
             val username = sharedPref.getString(getString(R.string.storage_key), null)

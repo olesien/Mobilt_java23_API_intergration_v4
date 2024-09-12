@@ -1,6 +1,7 @@
 package edu.linus.apitest
 
 import android.content.Context
+import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -73,7 +74,6 @@ class UtilFuncs {
                     setMargins(8, 8, 8, 8) // Margin for CardView
                 }
                 radius = 4f
-                setCardBackgroundColor(Color.WHITE)
                 elevation = 4f
             }
 

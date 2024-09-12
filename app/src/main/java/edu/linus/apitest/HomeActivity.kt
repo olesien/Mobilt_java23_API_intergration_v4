@@ -1,6 +1,9 @@
 package edu.linus.apitest
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -28,6 +31,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var tempText: TextView
     private lateinit var humidityText: TextView
     private lateinit var weatherText: TextView
+    private lateinit var sharedPref: SharedPreferences
 
     private fun getWeatherHomeData(key: String, lat: Double, long: Double) {
     // Instantiate the cache
@@ -96,10 +100,15 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        sharedPref = getSharedPreferences(getString(R.string.storage_key), Context.MODE_PRIVATE)
         cityText = findViewById(R.id.city)
         tempText = findViewById(R.id.temp)
         humidityText = findViewById(R.id.humidity)
         weatherText = findViewById(R.id.weather)
+
+        //Set username
+        findViewById<TextView>(R.id.loggedInAs).text =
+            "Logged in as: ${sharedPref.getString(getString(R.string.storage_key), null)}"
 
         // in onCreate() initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -135,5 +144,15 @@ class HomeActivity : AppCompatActivity() {
             .addOnSuccessListener { location->
                 getData(location)
             }
+    }
+    //Auto logout
+    override fun onStart() {
+        super.onStart()
+
+        val userName =sharedPref.getString(getString(R.string.storage_key), null);
+        if (userName == null) {
+            val intent = Intent(this, MainActivity::class.java)
+            this.startActivity(intent)
+        }
     }
 }
